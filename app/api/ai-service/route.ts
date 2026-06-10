@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
-  const { prompt, service } = await req.json()
-
+  const { prompt } = await req.json()
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -11,13 +10,9 @@ export async function POST(req: NextRequest) {
     },
     body: JSON.stringify({
       model: 'openai/gpt-oss-120b',
-      messages: [
-        { role: 'system', content: `Wewe ni ${service} wa CTRLALTMOHA. Jibu kwa Kiswahili, uwe msaada.` },
-        { role: 'user', content: prompt }
-      ],
+      messages: [{ role: 'user', content: prompt }],
     }),
   })
-
   const data = await res.json()
   return NextResponse.json({ reply: data.choices[0].message.content })
 }
